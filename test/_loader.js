@@ -220,27 +220,35 @@ function loadDetectionCore({ sandboxBeforeRun } = {}) {
     const bassDefaultOffsets4 = [0, 0, 0, 0];
     const bassDefaultOffsets5 = [0, 0, 0, 0, 0];
     const guitarDefaultOffsets7 = [0, 0, 0, 0, 0, 0, 0];
+    const carnaticMandolinDefaultOffsets5 = [0, 0, 0, 0, 0];
+
+    function defaultStringCountFor(arrangement) {
+        if (arrangement === 'bass') return 4;
+        if (arrangement === 'carnatic-mandolin') return 5;
+        return 6;
+    }
 
     function defaultOffsetsFor(arrangement, stringCount) {
         if (arrangement === 'bass') {
             return stringCount === 5 ? bassDefaultOffsets5 : bassDefaultOffsets4;
         }
+        if (arrangement === 'carnatic-mandolin') return carnaticMandolinDefaultOffsets5;
         return stringCount === 7 ? guitarDefaultOffsets7 : guitarDefaultOffsets6;
     }
 
     const midiFromStringFretWrapped = (string, fret, arrangement = 'guitar', stringCount) => {
-        const sc = stringCount ?? (arrangement === 'bass' ? 4 : 6);
+        const sc = stringCount ?? defaultStringCountFor(arrangement);
         return sandbox._ndMidiFromStringFret(string, fret, arrangement, sc, defaultOffsetsFor(arrangement, sc), 0);
     };
 
     const midiToStringFretWrapped = (midi, arrangement = 'guitar', stringCount) => {
-        const sc = stringCount ?? (arrangement === 'bass' ? 4 : 6);
+        const sc = stringCount ?? defaultStringCountFor(arrangement);
         const r = sandbox._ndMidiToStringFret(midi, arrangement, sc, defaultOffsetsFor(arrangement, sc), 0);
         return { string: r.string, fret: r.fret };
     };
 
     const resolveDisplayFingeringWrapped = (detectedMidi, candidates, arrangement = 'guitar', pitchTolCents = 50, stringCount) => {
-        const sc = stringCount ?? (arrangement === 'bass' ? 4 : 6);
+        const sc = stringCount ?? defaultStringCountFor(arrangement);
         const r = sandbox._ndResolveDisplayFingering(
             detectedMidi, candidates, arrangement, sc, defaultOffsetsFor(arrangement, sc), 0, pitchTolCents
         );

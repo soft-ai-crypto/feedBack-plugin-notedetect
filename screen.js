@@ -460,6 +460,7 @@ const _ND_TUNING_BASS_6 = [23, 28, 33, 38, 43, 48];           // B0 E1 A1 D2 G2 
 const _ND_TUNING_GUITAR_6 = [40, 45, 50, 55, 59, 64];         // E2 A2 D3 G3 B3 E4
 const _ND_TUNING_GUITAR_7 = [35, 40, 45, 50, 55, 59, 64];     // B1 E2 A2 D3 G3 B3 E4
 const _ND_TUNING_GUITAR_8 = [30, 35, 40, 45, 50, 55, 59, 64]; // F#1 B1 E2 A2 D3 G3 B3 E4
+const _ND_TUNING_CARNATIC_MANDOLIN = [49, 56, 61, 68, 73];    // C#3 G#3 C#4 G#4 C#5
 
 // Calibration-wizard instrument presets (standalone, no song to read tuning
 // from). Each maps to an arrangement + stringCount that _ndStandardMidiFor
@@ -474,7 +475,9 @@ const _CAL_WIZARD_INSTRUMENT_CONFIGS = [
 ];
 
 function _ndArrangementKindFromName(name) {
-    return /bass/i.test(String(name || '')) ? 'bass' : 'guitar';
+    const s = String(name || '');
+    if (/carnatic\s+mandolin/i.test(s)) return 'carnatic-mandolin';
+    return /bass/i.test(s) ? 'bass' : 'guitar';
 }
 
 function _ndStandardMidiFor(arrangement, stringCount) {
@@ -482,6 +485,7 @@ function _ndStandardMidiFor(arrangement, stringCount) {
         if (stringCount === 6) return _ND_TUNING_BASS_6;
         return stringCount === 5 ? _ND_TUNING_BASS_5 : _ND_TUNING_BASS_4;
     }
+    if (arrangement === 'carnatic-mandolin') return _ND_TUNING_CARNATIC_MANDOLIN;
     if (stringCount === 8) return _ND_TUNING_GUITAR_8;
     if (stringCount === 7) return _ND_TUNING_GUITAR_7;
     return _ND_TUNING_GUITAR_6;
@@ -1394,6 +1398,7 @@ function _ndMidiToStringFret(midiNote, arrangement, stringCount, offsets, capo) 
     // _ndResolveDisplayFingering picks the chart's (s, f) instead — see the
     // research notes in mapping-bass.test.js.
     const base = _ndStandardMidiFor(arrangement, stringCount);
+    const maxFret = arrangement === 'carnatic-mandolin' ? 15 : 24;
     let bestDist = Infinity;
     let bestString = -1;
     let bestFret = -1;
@@ -1401,7 +1406,7 @@ function _ndMidiToStringFret(midiNote, arrangement, stringCount, offsets, capo) 
         const offset = offsets && offsets[s] !== undefined ? offsets[s] : 0;
         const openMidi = base[s] + offset + (capo || 0);
         const fret = Math.round(midiNote - openMidi);
-        if (fret < 0 || fret > 24) continue;
+        if (fret < 0 || fret > maxFret) continue;
         const dist = Math.abs(midiNote - (openMidi + fret));
         if (dist < bestDist) {
             bestDist = dist;
@@ -1795,10 +1800,11 @@ function _ndHpsDetect(buffer, sampleRate, minFreqHz = _ND_MIN_DETECTABLE_HZ) {
 // Returns [loHz, hiHz] for the given string/arrangement/stringCount/offsets/capo.
 function _ndStringBandHz(stringIdx, arrangement, stringCount, offsets, capo) {
     const openMidi = _ndMidiFromStringFret(stringIdx, 0, arrangement, stringCount, offsets, capo);
-    const fret24Midi = openMidi + 24;
+    const maxFret = arrangement === 'carnatic-mandolin' ? 15 : 24;
+    const fretMaxMidi = openMidi + maxFret;
     // MIDI → Hz: 440 * 2^((midi-69)/12)
     const loHz = 440 * Math.pow(2, (openMidi - 69) / 12) * 0.90; // -10% margin
-    const hiHz = 440 * Math.pow(2, (fret24Midi - 69) / 12) * 1.10; // +10% margin
+    const hiHz = 440 * Math.pow(2, (fretMaxMidi - 69) / 12) * 1.10; // +10% margin
     return [loHz, hiHz];
 }
 
@@ -13657,7 +13663,9 @@ function createNoteDetector(options = {}) {
             const tuneLen = Array.isArray(info.tuning) ? info.tuning.length : null;
             const consistent = currentArrangement === 'bass'
                 ? (tuneLen === 4 || tuneLen === 5)
-                : (tuneLen === 6 || tuneLen === 7 || tuneLen === 8);
+                : currentArrangement === 'carnatic-mandolin'
+                    ? (tuneLen === 5)
+                    : (tuneLen === 6 || tuneLen === 7 || tuneLen === 8);
             if (consistent) {
                 currentStringCount = tuneLen;
             } else {

@@ -96,3 +96,12 @@ test('5-string bass midiFromStringFret(4, 0) returns MIDI 43 (open G2 is now str
     // string up by one.
     assert.equal(core.midiFromStringFret(4, 0, 'bass', 5), 43);
 });
+
+// ── Carnatic mandolin — C#3 G#3 C#4 G#4 C#5, geometric cap at fret 15 ─────
+
+test('carnatic mandolin open C#3 (MIDI 49) maps to string 0, fret 0', () => {
+    assert.equal(core.midiFromStringFret(0, 0, 'carnatic-mandolin', 5), 49);
+    assert.equal(core.midiFromStringFret(4, 0, 'carnatic-mandolin', 5), 73);
+    const r = core.midiToStringFret(49, 'carnatic-mandolin', 5);
+    assert.deepEqual(r, { string: 0, fret: 0 });
+});

@@ -4391,7 +4391,7 @@ function createNoteDetector(options = {}) {
                 if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                     const isHttp = location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1';
                     const msg = isHttp
-                        ? 'Microphone access requires HTTPS. You are accessing Slopsmith over HTTP from a non-localhost address. Either:\n\n1. Use a reverse proxy with HTTPS (recommended)\n2. Access via localhost\n3. Add a self-signed certificate to the server'
+                        ? 'Microphone access requires HTTPS. You are accessing fee[dB]ack over HTTP from a non-localhost address. Either:\n\n1. Use a reverse proxy with HTTPS (recommended)\n2. Access via localhost\n3. Add a self-signed certificate to the server'
                         : 'Microphone access is not available in this browser. Use Chrome or Edge.';
                     throw new Error(msg);
                 }
@@ -9163,7 +9163,7 @@ function createNoteDetector(options = {}) {
                     : '');
             html = `
                 ${_calWizardDetectBanner(snap)}
-                <p class="text-gray-300 text-xs mb-2">Confirm which input channel Slopsmith is listening to. Strum while auto-detect runs.</p>
+                <p class="text-gray-300 text-xs mb-2">Confirm which input channel fee[dB]ack is listening to. Strum while auto-detect runs.</p>
                 <div class="text-[11px] text-gray-300 font-mono space-y-1 mb-2">
                     <div>Device: ${_calWizardDeviceLabel()}</div>
                     <div>Channel: ${snap.channel || '—'}</div>
@@ -9279,7 +9279,7 @@ function createNoteDetector(options = {}) {
             const runBtnCls = allRunning ? ' opacity-60 cursor-not-allowed' : '';
             html = `
                 ${_calWizardDetectBanner(snap)}
-                <p class="text-gray-300 text-xs mb-2">Quick check that Slopsmith hears open strings. This is simpler than Technique Assessment — just confirms basic detection works.</p>
+                <p class="text-gray-300 text-xs mb-2">Quick check that fee[dB]ack hears open strings. This is simpler than Technique Assessment — just confirms basic detection works.</p>
                 <p class="text-[10px] text-gray-500 mb-2">Targets match the current song tuning. Use the same tone and pitch-shift path you will play the song with.</p>
                 <p class="text-[10px] text-gray-500 mb-2">Load a song first for song tuning in the tuner.</p>
                 ${instrumentPickerHtml}
@@ -10907,7 +10907,7 @@ function createNoteDetector(options = {}) {
         }
 
         if (stepId === 'intro') {
-            html += `<p class="text-gray-300 text-xs mb-3"><strong class="text-gray-200">Calibration Wizard</strong> sets up your input. <strong class="text-gray-200">Technique Assessment</strong> checks how well Slopsmith hears your playing.</p>
+            html += `<p class="text-gray-300 text-xs mb-3"><strong class="text-gray-200">Calibration Wizard</strong> sets up your input. <strong class="text-gray-200">Technique Assessment</strong> checks how well fee[dB]ack hears your playing.</p>
                 <p class="text-gray-300 text-xs mb-3">Each check looks at <strong class="text-gray-200">signal clarity</strong>, whether the <strong class="text-gray-200">main note</strong> is present, and <strong class="text-gray-200">tuning match</strong>. Read-only — nothing here changes gameplay settings.</p>
                 <button type="button" class="nd-cal-lab-start-basic w-full py-2.5 bg-accent hover:bg-accent-light rounded-lg text-xs font-semibold text-white mb-2">Start Basic Assessment</button>
                 <p class="text-[10px] text-gray-500 mb-3">Checks input level, open strings, one fretted note, and one power chord. Best first step.</p>
@@ -16076,7 +16076,7 @@ function createNoteDetector(options = {}) {
                 if (!localBundle || !doRetry) return;
                 retryBtn.disabled = true;
                 retryBtn.textContent = 'Retrying…';
-                setStatus('info', 'Re-uploading the saved bundle to pCloud — no re-recording needed. Don’t close Slopsmith yet.');
+                setStatus('info', 'Re-uploading the saved bundle to pCloud — no re-recording needed. Don’t close fee[dB]ack yet.');
                 let result = null;
                 const p = doRetry(localBundle);
                 _activeUpload = p;
@@ -16112,7 +16112,7 @@ function createNoteDetector(options = {}) {
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Uploading…';
                 cancelBtn.textContent = 'Hide';
-                setStatus('info', 'Bundling the WAV, detect-stream, and manifest, then shipping to pCloud. Don’t close Slopsmith yet — this can take a few seconds on a slow uplink.');
+                setStatus('info', 'Bundling the WAV, detect-stream, and manifest, then shipping to pCloud. Don’t close fee[dB]ack yet — this can take a few seconds on a slow uplink.');
 
                 let result = null;
                 const p = doUpload(formData);
@@ -16927,7 +16927,7 @@ function createNoteDetector(options = {}) {
         if (typeof window.playSong !== 'function') {
             _ndSetDiagnosticLaunchStatus(
                 panel,
-                'Diagnostic track could not be loaded. Restart Slopsmith or rescan your library.',
+                'Diagnostic track could not be loaded. Restart fee[dB]ack or rescan your library.',
             );
             return;
         }
@@ -16951,7 +16951,7 @@ function createNoteDetector(options = {}) {
             console.warn('[note_detect] diagnostic launch failed:', e);
             _ndSetDiagnosticLaunchStatus(
                 panel,
-                'Diagnostic track could not be loaded. Restart Slopsmith or rescan your library.',
+                'Diagnostic track could not be loaded. Restart fee[dB]ack or rescan your library.',
             );
             return;
         }
@@ -16967,7 +16967,7 @@ function createNoteDetector(options = {}) {
 
         _ndSetDiagnosticLaunchStatus(
             panel,
-            'Diagnostic track is not available yet. Restart Slopsmith or rescan the library. If it still does not appear, the built-in diagnostic pack may not be installed.',
+            'Diagnostic track is not available yet. Restart fee[dB]ack or rescan the library. If it still does not appear, the built-in diagnostic pack may not be installed.',
         );
     }
 

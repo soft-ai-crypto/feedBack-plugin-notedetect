@@ -7722,7 +7722,7 @@ function createNoteDetector(options = {}) {
                 if (lvl >= trigger && wiz.autoCapture.phase === 'wait_signal') {
                     wiz.autoCapture.phase = 'listening';
                     wiz.autoCapture.signalStarted = Date.now();
-                    _calWizardSetAutoStatus('<span class="text-cyan-300/90">Signal detected — listening…</span> Play open low E.');
+                    _calWizardSetAutoStatus('<span class="text-cyan-300/90">Signal detected — listening…</span> Play your lowest open string.');
                 }
                 if (wiz.autoCapture.phase === 'listening') {
                     samples.push({ level: lvl, peak: s.inputPeakPct, t: Date.now() });
@@ -7737,7 +7737,7 @@ function createNoteDetector(options = {}) {
                     }
                 } else {
                     _calWizardSetAutoStatus(
-                        `<span class="text-cyan-300/90">Waiting for signal…</span> Play open low E (need ≥${trigger}%). `
+                        `<span class="text-cyan-300/90">Waiting for signal…</span> Play your lowest open string (need ≥${trigger}%). `
                         + calibrationFormatLevel(lvl, s.inputPeakPct));
                     if (elapsed >= maxWait) {
                         _calWizardStopAutoCapture();
@@ -8739,7 +8739,7 @@ function createNoteDetector(options = {}) {
     function _calWizardFormatChannelProbeResult(result) {
         const summary = (result && result.trials) ? _calWizardChannelProbeTrialsSummary(result.trials) : '';
         if (!result || result.ok === false) {
-            return `<span class="text-amber-200/90">No strong input detected.</span> Check guitar volume, cable, Spark USB routing, input gain, or try another device.${summary ? `<div class="text-gray-500 mt-1">${summary}</div>` : ''}`;
+            return `<span class="text-amber-200/90">No strong input detected.</span> Check instrument volume, cable, Spark USB routing, input gain, or try another device.${summary ? `<div class="text-gray-500 mt-1">${summary}</div>` : ''}`;
         }
         if (result.ok === 'ambiguous') {
             const sug = Number.isFinite(result.suggestedCh)
@@ -9167,7 +9167,7 @@ function createNoteDetector(options = {}) {
                     : '');
             html = `
                 ${_calWizardDetectBanner(snap)}
-                <p class="text-gray-300 text-xs mb-2">Confirm which input channel fee[dB]ack is listening to. Strum while auto-detect runs.</p>
+                <p class="text-gray-300 text-xs mb-2">Confirm which input channel fee[dB]ack is listening to. Play your open strings while auto-detect runs.</p>
                 <div class="text-[11px] text-gray-300 font-mono space-y-1 mb-2">
                     <div>Device: ${_calWizardDeviceLabel()}</div>
                     <div>Channel: ${snap.channel || '—'}</div>
@@ -9182,10 +9182,10 @@ function createNoteDetector(options = {}) {
                 ${probeResultHtml}
                 <p class="text-[10px] text-gray-500 mb-1"><strong class="text-gray-400">Desktop:</strong> this step sets the native audio engine channel (saved automatically when a winner is found).</p>
                 <p class="text-[10px] text-gray-500">The <strong>Input Channel</strong> dropdown below only applies to browser microphone fallback — not desktop audio.</p>
-                <p class="text-[10px] text-amber-200/80">If stuck: check USB cable, interface gain, turn Detect on, and strum loudly during the test.</p>`;
+                <p class="text-[10px] text-amber-200/80">If stuck: check USB cable, interface gain, turn Detect on, and play loudly during the test.</p>`;
         } else if (step === 2) {
             html = `
-                <p class="text-gray-300 text-xs mb-2">Tune your guitar using the bottom <strong class="text-gray-200">Tuner</strong> panel.</p>
+                <p class="text-gray-300 text-xs mb-2">Tune your instrument using the bottom <strong class="text-gray-200">Tuner</strong> panel.</p>
                 <p class="text-[10px] text-gray-500 mb-2">The tuner opens automatically and hides this wizard. Tap <strong>Return to Calibration Wizard</strong> when done — or use <strong>Open Tuner</strong> below to reopen it.</p>
                 <p class="text-[10px] text-amber-200/80">If notes miss often later: retune here before continuing.</p>
                 <button type="button" class="nd-cal-open-tuner w-full mb-2 py-2 bg-dark-600 hover:bg-dark-500 rounded-lg text-xs text-gray-200">Open Tuner</button>
@@ -9206,7 +9206,7 @@ function createNoteDetector(options = {}) {
             const sDone = wiz.signal && wiz.signal.captured;
             html = `
                 ${_calWizardDetectBanner(snap)}
-                <p class="text-gray-300 text-xs mb-2">Play your <strong class="text-gray-200">open low E</strong> at normal playing volume when prompted. Listening starts after the countdown.</p>
+                <p class="text-gray-300 text-xs mb-2">Play your <strong class="text-gray-200">lowest open string</strong> at normal playing volume when prompted. Listening starts after the countdown.</p>
                 <div class="nd-cal-live-level text-cyan-300/90 text-xs font-mono mb-2">Live: —</div>
                 <div class="nd-cal-auto-status text-[11px] text-gray-400 mb-2 h-[2.75rem] overflow-y-auto">${sDone
                     ? `Captured: avg ${wiz.signal.avgPct}% · peak ${wiz.signal.peakPct}% · ${_calWizardSignalStatusDisplay(wiz.signal.status)}`
@@ -9228,7 +9228,7 @@ function createNoteDetector(options = {}) {
                         <option value="">— Auto (6-string guitar) —</option>
                         ${_instrOpts}
                     </select>
-                    <p class="text-[9px] text-gray-500 mt-1">Pick a 4/5/6-string bass or 6/7/8-string guitar so the open-string targets match your instrument.</p>
+                    <p class="text-[9px] text-gray-500 mt-1">Pick a 4/5/6-string bass, 6/7/8-string guitar or Carnatic Mandolin so the open-string targets match your instrument.</p>
                 </div>`;
             const allStr = wiz.allStrings || _calWizardDefaultAllStringsState();
             const allRunning = !!allStr.running;

@@ -9218,7 +9218,9 @@ function createNoteDetector(options = {}) {
             // Standalone (no song): let the player pick their instrument so the
             // open-string targets cover 5/6-string bass and 7/8-string guitar.
             const _calCtx = _calWizardResolveNoteCheckContext();
-            const _instrOpts = _CAL_WIZARD_INSTRUMENT_CONFIGS.map((c) =>
+            const _instrOpts = _CAL_WIZARD_INSTRUMENT_CONFIGS.filter((c) =>
+                c.id !== 'bass-4' && c.id !== 'bass-5' && c.id !== 'bass-6'
+            ).map((c) =>
                 `<option value="${c.id}"${wiz.selectedInstrumentConfig === c.id ? ' selected' : ''}>${c.label}</option>`
             ).join('');
             const instrumentPickerHtml = _calCtx.hasTuning ? '' : `
@@ -9228,7 +9230,7 @@ function createNoteDetector(options = {}) {
                         <option value="">— Auto (6-string guitar) —</option>
                         ${_instrOpts}
                     </select>
-                    <p class="text-[9px] text-gray-500 mt-1">Pick a 4/5/6-string bass, 6/7/8-string guitar or Carnatic Mandolin so the open-string targets match your instrument.</p>
+                    <p class="text-[9px] text-gray-500 mt-1">Pick a 6/7/8-string guitar or Carnatic Mandolin so the open-string targets match your instrument.</p>
                 </div>`;
             const allStr = wiz.allStrings || _calWizardDefaultAllStringsState();
             const allRunning = !!allStr.running;

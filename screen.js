@@ -472,6 +472,7 @@ const _CAL_WIZARD_INSTRUMENT_CONFIGS = [
     { id: 'guitar-6', label: '6-string guitar',        arrangement: 'guitar', stringCount: 6 },
     { id: 'guitar-7', label: '7-string guitar',        arrangement: 'guitar', stringCount: 7 },
     { id: 'guitar-8', label: '8-string guitar',        arrangement: 'guitar', stringCount: 8 },
+    { id: 'carnatic-mandolin', label: 'Carnatic Mandolin', arrangement: 'carnatic-mandolin', stringCount: 5 },
 ];
 
 function _ndArrangementKindFromName(name) {
@@ -8512,7 +8513,7 @@ function createNoteDetector(options = {}) {
         opts = opts || {};
         const onDone = typeof opts.onDone === 'function' ? opts.onDone : null;
         const onCancel = typeof opts.onCancel === 'function' ? opts.onCancel : null;
-        const forcedInstrument = (opts.instrument === 'guitar' || opts.instrument === 'bass')
+        const forcedInstrument = (opts.instrument === 'guitar' || opts.instrument === 'bass' || opts.instrument === 'carnatic-mandolin')
             ? opts.instrument : null;
         if (forcedInstrument) currentArrangement = forcedInstrument;
         const start = () => {
@@ -8537,6 +8538,9 @@ function createNoteDetector(options = {}) {
             // _syncChartStateFromHw's reset-to-guitar on every note-check resolve
             // while no real song chart is loaded (onboarding standalone).
             _calWizardForceArrangement = forcedInstrument;
+            if (forcedInstrument === 'carnatic-mandolin' && _calWizardState) {
+                _calWizardState.selectedInstrumentConfig = 'carnatic-mandolin';
+            }
         };
         // Measurement steps (noise/signal/notes) need Detect ON. Enable first;
         // fail-soft — open the wizard regardless so the caller is never stranded.
